@@ -1,0 +1,45 @@
+{
+  "name": "agent-starter-node",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "build": "tsc",
+    "clean": "rm -rf dist",
+    "typecheck": "tsc --noEmit",
+    "lint": "eslint \"**/*.{ts,js}\"",
+    "lint:fix": "eslint --fix \"**/*.{ts,js}\"",
+    "format": "prettier --write \"**/*.{ts,js,json,md}\"",
+    "format:check": "prettier --check \"**/*.{ts,js,json,md}\"",
+    "test": "node --test --import tsx",
+    "test:watch": "node --test --watch --import tsx",
+    "dev": "tsx --env-file=.env src/agent.ts dev",
+    "download-files": "tsc && node dist/agent.js download-files",
+    "start": "node --env-file=.env dist/agent.js start"
+  },
+  "engines": {
+    "node": ">=22.0.0",
+    "pnpm": ">=10.0.0"
+  },
+  "devDependencies": {
+    "@eslint/js": "^9.38.0",
+    "@trivago/prettier-plugin-sort-imports": "^5.2.2",
+    "@types/node": "^22.18.11",
+    "eslint": "^9.38.0",
+    "globals": "^16.4.0",
+    "jiti": "^2.6.1",
+    "tsx": "^4.20.6",
+    "typescript": "^5.9.3",
+    "typescript-eslint": "^8.46.2"
+  },
+  "dependencies": {
+    "@livekit/agents": "^1.0.21",
+    "@livekit/agents-plugin-livekit": "^1.0.21",
+    "@livekit/agents-plugin-silero": "^1.0.21",
+    "@livekit/noise-cancellation-node": "^0.1.9",
+    "@types/axios": "^0.14.4",
+    "axios": "^1.13.3",
+    "dotenv": "^17.2.3",
+    "zod": "^3.25.76"
+  }
+}

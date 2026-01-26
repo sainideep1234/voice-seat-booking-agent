@@ -1,0 +1,117 @@
+import express, { type Request, type Response } from "express";
+import { Booking } from "./models";
+import { bookInput } from "./type";
+import { connectToDb } from "./mongodb_client";
+import mongoose from "mongoose";
+import cors from "cors";
+
+const app = express();
+const PORT = 3001;
+app.use(cors());
+
+app.use(express.json());
+//TODO: (ask) userId can be as dynamic parameter
+//  right know no sign in signup so no userID we are pouring all data to llm which is not good practice as with time data grow llm context window is smaller for that
+app.get("/api/booking", async (req: Request, res: Response) => {
+  const booking = await Booking.find();
+
+  if (!booking) {
+    res.status(400).json({
+      message: "no booking",
+    });
+    return;
+  }
+
+  res.status(201).json({
+    message: "booking fetched succesfully",
+    booking,
+  });
+});
+
+app.get("/api/booking/:id", async (req: Request, res: Response) => {
+  const { id: bookingId } = req.params;
+
+  const booking = await Booking.find({ _id: bookingId });
+  if (!booking) {
+    res.status(400).json({
+      message: "no booking",
+    });
+    return;
+  }
+
+  res.status(201).json({
+    message: "booking fetched succesfully",
+    booking,
+  });
+});
+
+app.post("/api/booking", async (req: Request, res: Response) => {
+  try {
+    console.log("call entered to booking request");
+
+    // const { data, success, error } = bookInput.safeParse(req.body);
+    // if (!success) {
+    //   res.status(401).json({
+    //     message: "send all inputs ",
+    //   });
+    //   return;
+    // }
+    const {
+      customerName,
+      numberOfGuests,
+      bookingDate,
+      bookingTime,
+      cuisinePreference,
+      specialRequests,
+      weatherInfo,
+      seatingPreference,
+      status,
+    } = req.body;
+
+    const booking = await Booking.create({
+      customerName,
+      numberOfGuests,
+      bookingDate,
+      bookingTime,
+      cuisinePreference,
+      specialRequests,
+      weatherInfo,
+      seatingPreference,
+      status,
+    });
+
+    if (!booking) {
+      res.status(500).json({
+        message: "Failed to book order",
+      });
+    }
+
+    res.status(201).json({
+      message: `Booking is done. here is your booking id :${booking._id} , status : ${booking.status} `,
+    });
+  } catch (error) {
+    console.log("server error while creating booking", error);
+  }
+});
+
+app.delete("/api/booking/:id", async (req: Request, res: Response) => {
+  const { id: bookingId } = req.params;
+
+  const deleteBooking = await Booking.findByIdAndDelete({ _id: bookingId });
+
+  if (!deleteBooking) {
+    res.status(400).json({
+      message: "no booking",
+    });
+    return;
+  }
+
+  res.status(201).json({
+    message: `Deleted booking : ${bookingId} successfully`,
+  });
+});
+
+connectToDb();
+app.listen(PORT, () => {
+  console.log(`server is started on port ${PORT}`);
+});
