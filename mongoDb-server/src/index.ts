@@ -35,6 +35,33 @@ app.get("/api/booking/:id", async (req: Request, res: Response) => {
     booking,
   });
 });
+app.post(
+  "/api/booking/check-availability",
+  async (req: Request, res: Response) => {
+    try {
+      const { bookingDate, bookingTime } = req.body;
+      if (!bookingDate || !bookingTime) {
+        res
+          .status(400)
+          .json({ message: "bookingDate and bookingTime are required" });
+        return;
+      }
+      const count = await Booking.countDocuments({
+        bookingDate: new Date(bookingDate),
+        bookingTime,
+        status: { $ne: "cancelled" },
+      });
+      const maxCapacity = 5;
+      res.status(200).json({
+        isAvailable: count < maxCapacity,
+        remainingTables: maxCapacity - count,
+      });
+    } catch (error) {
+      console.error("Error checking availability", error);
+      res.status(500).json({ message: "Internal server error" });
+    }
+  },
+);
 app.post("/api/booking", async (req: Request, res: Response) => {
   try {
     console.log("call entered to booking request");
