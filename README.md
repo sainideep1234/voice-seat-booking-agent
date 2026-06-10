@@ -2,133 +2,93 @@
 
 AI-powered voice assistant for restaurant reservations built with LiveKit Agents, Next.js, and MongoDB.
 
+## 🌟 Motive & Inspiration
+
+### The Problem
+Traditional online restaurant reservation systems rely on static web forms. Users must manually click through dates, pick times, select options, and fill out text boxes. If a customer has a unique dietary restriction, a seating preference based on today's weather, or needs to change their reservation details mid-way, the process becomes rigid and frustrating.
+
+### The Solution
+The **Restaurant Voice Booking Agent** re-imagines typical web forms as intuitive, natural, non-linear voice conversations. 
+Inspired by the hospitality of a real restaurant host, this project uses LiveKit's real-time voice streaming framework and LLM function-calling capabilities to allow users to book tables verbally. 
+
+The agent can:
+- Conversationalize table availability checks, seating preferences (suggesting indoor/outdoor depending on real-time weather), cuisine selections, and special requests.
+- Dynamically adapt if the customer changes their mind or corrects a detail (e.g. changing the guest count) at any point in the conversation.
+- Persist, update, delete, and look up booking details directly in MongoDB via local tool invocation.
+
+---
+
 ## 🚀 Quick Start
 
 ### Prerequisites
+- **Node.js** >= 22.0.0
+- **MongoDB** instance (Local or Atlas URI)
+- **LiveKit Cloud** account (for voice streaming)
+- **WeatherAPI.com** API key (for weather-based seating suggestions)
 
-- Node.js >= 22.0.0
-- pnpm >= 10.0.0
-- Bun (for MongoDB server)
-- MongoDB instance
-- LiveKit account
+---
 
-### Installation
+### 1. Configure Environment Variables
 
-1. **Clone and install dependencies**
+Create the `.env` configuration files in the `backend` and `frontend` directories.
 
+#### **`backend/.env`** (or `.env.local`)
+```env
+LIVEKIT_URL=wss://your-livekit-project.livekit.cloud
+LIVEKIT_API_KEY=your-livekit-api-key
+LIVEKIT_API_SECRET=your-livekit-api-secret
+WEATHER_API_KEY=your-weatherapi-key
+MONGODB_URL=mongodb://localhost:27017/restaurant-bookings
+```
+
+#### **`frontend/.env`** (or `.env.local`)
+```env
+NEXT_PUBLIC_LIVEKIT_URL=wss://your-livekit-project.livekit.cloud
+LIVEKIT_API_KEY=your-livekit-api-key
+LIVEKIT_API_SECRET=your-livekit-api-secret
+```
+
+---
+
+### 2. Start Services
+
+Open two terminal windows:
+
+#### **Terminal 1: LiveKit Voice Agent Backend**
 ```bash
-# Clone repository
-git clone https://github.com/sainideep1234/restaurant-voice-booking-agent.git
-cd vaiu-assignment
-
-# Install agent dependencies
-cd agent-starter-node
-pnpm install
-
-# Install frontend dependencies
-cd ../frontend
-pnpm install
-pnpm run download-files  # Important: Download required files
-
-# Install MongoDB server dependencies
-cd ../mongoDb-server
-bun install
+cd backend
+pnpm install     # or npm install
+pnpm run dev     # or npm run dev
 ```
 
-2. **Configure environment variables**
-
-Create `.env` files in each directory (see `.env.example` files):
-
-**agent-starter-node/.env**
-```env
-LIVEKIT_URL=wss://your-livekit-url
-LIVEKIT_API_KEY=your-api-key
-LIVEKIT_API_SECRET=your-api-secret
-```
-
-**frontend/.env**
-```env
-NEXT_PUBLIC_LIVEKIT_URL=wss://your-livekit-url
-LIVEKIT_API_KEY=your-api-key
-LIVEKIT_API_SECRET=your-api-secret
-```
-
-**mongoDb-server/.env**
-```env
-MONGO_URI=mongodb://localhost:27017/restaurant-bookings
-PORT=3001
-```
-
-3. **Start all services**
-
-Open three terminal windows:
-
+#### **Terminal 2: Frontend Web App**
 ```bash
-# Terminal 1: MongoDB Server
-cd mongoDb-server
-bun run dev
-
-# Terminal 2: LiveKit Agent
-cd agent-starter-node
-pnpm dev
-
-# Terminal 3: Frontend
 cd frontend
-pnpm dev
+pnpm install     # or npm install
+pnpm run download-files
+pnpm run dev     # or npm run dev
 ```
 
-4. **Access the application**
+---
 
-Open [http://localhost:3000](http://localhost:3000)
+### 3. Test & Enjoy!
+Open [http://localhost:3000](http://localhost:3000) in your browser to interact with your Voice Booking Agent.
+
+---
 
 ## 📁 Project Structure
 
 ```
-vaiu-assignment/
-├── agent-starter-node/    # LiveKit Voice AI Agent (Node.js)
-├── frontend/              # Next.js Web Application
-├── mongoDb-server/        # Express + MongoDB API (Bun)
-└── README.md
+restaurant-voice-booking-agent/
+├── backend/            # LiveKit Voice AI Agent (runs voice logic & MongoDB database layer)
+├── frontend/           # Next.js Web Application UI
+└── README.md           # This setup guide
 ```
 
 ## 🛠️ Tech Stack
-
-- **Agent**: LiveKit Agents (Node.js 22+, TypeScript)
+- **Voice Agent Framework**: `@livekit/agents` (Node.js & TypeScript)
+- **Speech-to-Text**: AssemblyAI streaming
+- **Text-to-Speech**: Cartesia Sonic
+- **LLM Engine**: GPT-4o-mini
+- **Database**: MongoDB (via Mongoose)
 - **Frontend**: Next.js 15, React 19, Tailwind CSS
-- **Database**: MongoDB, Express, Bun runtime
-
-## 📚 Documentation
-
-Each component has detailed documentation:
-
-- [Agent Documentation](./agent-starter-node/README.md)
-- [Frontend Documentation](./frontend/README.md)
-- [MongoDB Server Documentation](./mongoDb-server/README.md)
-
-## 🔧 Development Commands
-
-### Agent
-```bash
-cd agent-starter-node
-pnpm dev              # Development mode
-pnpm build            # Build for production
-pnpm start            # Run production build
-```
-
-### Frontend
-```bash
-cd frontend
-pnpm dev              # Development mode
-pnpm build            # Build for production
-pnpm start            # Run production build
-```
-
-### MongoDB Server
-```bash
-cd mongoDb-server
-bun run dev           # Development mode
-```
-
-## 📄 License
-
-MIT License - see [LICENSE](LICENSE) file for details.

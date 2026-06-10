@@ -15,18 +15,18 @@ export interface AppConfig {
   sandboxId?: string;
 }
 export const APP_CONFIG_DEFAULTS: AppConfig = {
-  companyName: 'LiveKit',
-  pageTitle: 'LiveKit Voice Agent',
-  pageDescription: 'A voice agent built with LiveKit',
+  companyName: 'New India Fine Dine',
+  pageTitle: 'New India Fine Dine - Voice Assistant',
+  pageDescription: 'Book your table at New India Fine Dine using our AI voice host',
   supportsChatInput: true,
-  supportsVideoInput: true,
-  supportsScreenShare: true,
+  supportsVideoInput: false,
+  supportsScreenShare: false,
   isPreConnectBufferEnabled: true,
-  logo: '/lk-logo.svg',
-  accent: '#002cf2',
-  logoDark: '/lk-logo-dark.svg',
-  accentDark: '#1fd5f9',
-  startButtonText: 'Start call',
+  logo: '/favicon.ico',
+  accent: '#a27b5c',
+  logoDark: '/favicon.ico',
+  accentDark: '#e5ba73',
+  startButtonText: 'Talk to Booking Host',
   agentName: process.env.AGENT_NAME ?? undefined,
   sandboxId: undefined,
 };

@@ -44,7 +44,7 @@ export default async function RootLayout({ children }: RootLayoutProps) {
   const hdrs = await headers();
   const appConfig = await getAppConfig(hdrs);
   const styles = getStyles(appConfig);
-  const { pageTitle, pageDescription, companyName, logo, logoDark } = appConfig;
+  const { pageTitle, pageDescription, companyName } = appConfig;
   return (
     <html
       lang="en"
@@ -67,31 +67,30 @@ export default async function RootLayout({ children }: RootLayoutProps) {
           enableSystem
           disableTransitionOnChange
         >
-          <header className="fixed top-0 left-0 z-50 hidden w-full flex-row justify-between p-6 md:flex">
-            <a
-              target="_blank"
-              rel="noopener noreferrer"
-              href="https://livekit.io"
-              className="scale-100 transition-transform duration-300 hover:scale-110"
-            >
-              <img src={logo} alt={`${companyName} Logo`} className="block size-6 dark:hidden" />
-
-              <img
-                src={logoDark ?? logo}
-                alt={`${companyName} Logo`}
-                className="hidden size-6 dark:block"
-              />
-            </a>
-            <span className="text-foreground font-mono text-xs font-bold tracking-wider uppercase">
-              Built with{' '}
-              <a
-                target="_blank"
-                rel="noopener noreferrer"
-                href="https://docs.livekit.io/agents"
-                className="underline underline-offset-4"
+          <header className="from-background/90 fixed top-0 left-0 z-50 flex w-full flex-row items-center justify-between bg-linear-to-b to-transparent p-6 backdrop-blur-xs">
+            <div className="flex items-center gap-2.5">
+              <svg
+                width="24"
+                height="24"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="2"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                className="text-foreground size-5 opacity-90"
               >
-                LiveKit Agents
-              </a>
+                <path d="M3 2v7c0 1.1.9 2 2 2h4a2 2 0 0 0 2-2V2" />
+                <path d="M7 2v20" />
+                <path d="M21 15V2v0a5 5 0 0 0-5 5v8c0 1.1.9 2 2 2h1a2 2 0 0 0 2-2Z" />
+                <path d="M19 15v7" />
+              </svg>
+              <span className="text-foreground font-mono text-xs font-bold tracking-widest uppercase md:text-sm">
+                {companyName}
+              </span>
+            </div>
+            <span className="text-muted-foreground font-mono text-[10px] tracking-wider uppercase md:text-xs">
+              Voice Reservation Host
             </span>
           </header>
 

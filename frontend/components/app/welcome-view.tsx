@@ -28,34 +28,25 @@ export const WelcomeView = ({
 }: React.ComponentProps<'div'> & WelcomeViewProps) => {
   return (
     <div ref={ref}>
-      <section className="bg-background flex flex-col items-center justify-center text-center">
+      <section className="bg-background flex flex-col items-center justify-center px-4 text-center">
         <WelcomeImage />
 
-        <p className="text-foreground max-w-prose pt-1 leading-6 font-medium">
-          Chat live with your voice AI agent
+        <p className="text-foreground max-w-prose pt-1 leading-6 font-medium tracking-wide">
+          Reserve your dining experience via AI Voice Host
         </p>
 
         <Button
           size="lg"
           onClick={onStartCall}
-          className="mt-6 w-64 rounded-full font-mono text-xs font-bold tracking-wider uppercase"
+          className="mt-8 w-64 rounded-full font-mono text-xs font-bold tracking-widest uppercase shadow-md transition-all duration-300 hover:scale-105 hover:shadow-lg active:scale-95"
         >
           {startButtonText}
         </Button>
       </section>
 
-      <div className="fixed bottom-5 left-0 flex w-full items-center justify-center">
-        <p className="text-muted-foreground max-w-prose pt-1 text-xs leading-5 font-normal text-pretty md:text-sm">
-          Need help getting set up? Check out the{' '}
-          <a
-            target="_blank"
-            rel="noopener noreferrer"
-            href="https://docs.livekit.io/agents/start/voice-ai/"
-            className="underline"
-          >
-            Voice AI quickstart
-          </a>
-          .
+      <div className="fixed bottom-6 left-0 flex w-full items-center justify-center">
+        <p className="text-muted-foreground max-w-prose font-mono text-[10px] tracking-widest uppercase opacity-60 md:text-xs">
+          New India Fine Dine • Intelligent Table Reservations
         </p>
       </div>
     </div>
