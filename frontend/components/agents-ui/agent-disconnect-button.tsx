@@ -12,7 +12,6 @@ export interface AgentDisconnectButtonProps
   icon?: React.ReactNode;
   children?: React.ReactNode;
 }
-
 export function AgentDisconnectButton({
   icon,
   size = 'default',
@@ -25,7 +24,6 @@ export function AgentDisconnectButton({
     onClick?.(event);
     end();
   };
-
   return (
     <Button variant="destructive" size={size} onClick={handleClick} {...props}>
       {icon ?? <PhoneOffIcon />}

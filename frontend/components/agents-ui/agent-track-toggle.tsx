@@ -37,12 +37,10 @@ export const agentTrackToggleVariants = cva(['size-9'], {
     variant: 'default',
   },
 });
-
 function getSourceIcon(source: Track.Source, enabled: boolean, pending = false) {
   if (pending) {
     return LoaderIcon;
   }
-
   switch (source) {
     case Track.Source.Microphone:
       return enabled ? MicIcon : MicOffIcon;
@@ -54,58 +52,15 @@ function getSourceIcon(source: Track.Source, enabled: boolean, pending = false) 
       return Fragment;
   }
 }
-
-/**
- * Props for the AgentTrackToggle component.
- */
 export type AgentTrackToggleProps = VariantProps<typeof toggleVariants> &
   ComponentProps<'button'> & {
-    /**
-     * The variant of the toggle.
-     * @defaultValue 'default'
-     */
     variant?: 'default' | 'outline';
-    /**
-     * The track source to toggle (Microphone, Camera, or ScreenShare).
-     */
     source: 'camera' | 'microphone' | 'screen_share';
-    /**
-     * Whether the toggle is in a pending/loading state.
-     * When true, displays a loading spinner icon.
-     * @defaultValue false
-     */
     pending?: boolean;
-    /**
-     * Whether the toggle is currently pressed/enabled.
-     * @defaultValue false
-     */
     pressed?: boolean;
-    /**
-     * The default pressed state when uncontrolled.
-     * @defaultValue false
-     */
     defaultPressed?: boolean;
-    /**
-     * Callback fired when the pressed state changes.
-     */
     onPressedChange?: (pressed: boolean) => void;
   };
-
-/**
- * A toggle button for controlling track publishing state.
- * Displays appropriate icons based on the track source and state.
- *
- * @extends ComponentProps<'button'>
- *
- * @example
- * ```tsx
- * <AgentTrackToggle
- *   source={Track.Source.Microphone}
- *   pressed={isMicEnabled}
- *   onPressedChange={(pressed) => setMicEnabled(pressed)}
- * />
- * ```
- */
 export function AgentTrackToggle({
   size = 'default',
   variant = 'default',
@@ -118,7 +73,6 @@ export function AgentTrackToggle({
   ...props
 }: AgentTrackToggleProps) {
   const IconComponent = getSourceIcon(source as Track.Source, pressed ?? false, pending);
-
   return (
     <Toggle
       size={size}

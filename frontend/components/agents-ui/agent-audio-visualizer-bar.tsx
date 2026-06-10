@@ -25,11 +25,9 @@ function cloneSingleChild(
   key?: unknown
 ) {
   return Children.map(children, (child) => {
-    // Checking isValidElement is the safe way and avoids a typescript error too.
     if (isValidElement(child) && Children.only(children)) {
       const childProps = child.props as Record<string, unknown>;
       if (childProps.className) {
-        // make sure we retain classnames of both passed props and child
         props ??= {};
         props.className = cn(childProps.className as string, props.className as string);
         props.style = {
@@ -42,7 +40,6 @@ function cloneSingleChild(
     return child;
   });
 }
-
 export const AgentAudioVisualizerBarVariants = cva(
   [
     'relative flex items-center justify-center',
@@ -64,57 +61,14 @@ export const AgentAudioVisualizerBarVariants = cva(
     },
   }
 );
-
-/**
- * Props for the AgentAudioVisualizerBar component.
- */
 export interface AgentAudioVisualizerBarProps {
-  /**
-   * The size of the visualizer.
-   * @defaultValue 'md'
-   */
   size?: 'icon' | 'sm' | 'md' | 'lg' | 'xl';
-  /**
-   * The current state of the agent. Determines the animation pattern.
-   * @defaultValue 'connecting'
-   */
   state?: AgentState;
-  /**
-   * The number of bars to display in the visualizer.
-   * If not provided, defaults based on size: 3 for 'icon'/'sm', 5 for others.
-   */
   barCount?: number;
-  /**
-   * The audio track to visualize. Can be a local/remote audio track or a track reference.
-   */
   audioTrack?: LocalAudioTrack | RemoteAudioTrack | TrackReferenceOrPlaceholder;
-  /**
-   * Additional CSS class names to apply to the container.
-   */
   className?: string;
-  /**
-   * Custom children to render as bars. Each child receives data-lk-index,
-   * data-lk-highlighted, and style props for height.
-   */
   children?: ReactNode | ReactNode[];
 }
-
-/**
- * A bar-style audio visualizer that responds to agent state and audio levels.
- * Displays animated bars that react to the current agent state (connecting, thinking, speaking, etc.)
- * and audio volume when speaking.
- *
- * @extends ComponentProps<'div'>
- *
- * @example
- * ```tsx
- * <AgentAudioVisualizerBar
- *   size="md"
- *   state="speaking"
- *   audioTrack={agentAudioTrack}
- * />
- * ```
- */
 export function AgentAudioVisualizerBar({
   size = 'md',
   state = 'connecting',
@@ -138,13 +92,11 @@ export function AgentAudioVisualizerBar({
         return 5;
     }
   }, [barCount, size]);
-
   const volumeBands = useMultibandTrackVolume(audioTrack, {
     bands: _barCount,
     loPass: 100,
     hiPass: 200,
   });
-
   const sequencerInterval = useMemo(() => {
     switch (state) {
       case 'connecting':
@@ -159,18 +111,15 @@ export function AgentAudioVisualizerBar({
         return 1000;
     }
   }, [state, _barCount]);
-
   const highlightedIndices = useAgentAudioVisualizerBarAnimator(
     state,
     _barCount,
     sequencerInterval
   );
-
   const bands = useMemo(
     () => (state === 'speaking' ? volumeBands : new Array(_barCount).fill(0)),
     [state, volumeBands, _barCount]
   );
-
   return (
     <div className={cn(AgentAudioVisualizerBarVariants({ size }), className)} {...props}>
       {bands.map((band: number, idx: number) =>

@@ -8,7 +8,6 @@ import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/shadcn/utils';
 
 export type ConversationProps = ComponentProps<typeof StickToBottom>;
-
 export const Conversation = ({ className, ...props }: ConversationProps) => (
   <StickToBottom
     className={cn('relative flex-1 overflow-y-hidden', className)}
@@ -18,19 +17,15 @@ export const Conversation = ({ className, ...props }: ConversationProps) => (
     {...props}
   />
 );
-
 export type ConversationContentProps = ComponentProps<typeof StickToBottom.Content>;
-
 export const ConversationContent = ({ className, ...props }: ConversationContentProps) => (
   <StickToBottom.Content className={cn('flex flex-col gap-8 p-4', className)} {...props} />
 );
-
 export type ConversationEmptyStateProps = ComponentProps<'div'> & {
   title?: string;
   description?: string;
   icon?: React.ReactNode;
 };
-
 export const ConversationEmptyState = ({
   className,
   title = 'No messages yet',
@@ -57,19 +52,15 @@ export const ConversationEmptyState = ({
     )}
   </div>
 );
-
 export type ConversationScrollButtonProps = ComponentProps<typeof Button>;
-
 export const ConversationScrollButton = ({
   className,
   ...props
 }: ConversationScrollButtonProps) => {
   const { isAtBottom, scrollToBottom } = useStickToBottomContext();
-
   const handleScrollToBottom = useCallback(() => {
     scrollToBottom();
   }, [scrollToBottom]);
-
   return (
     !isAtBottom && (
       <Button

@@ -6,7 +6,6 @@ import { AgentChatTranscript } from '@/components/agents-ui/agent-chat-transcrip
 import { cn } from '@/lib/shadcn/utils';
 
 const MotionContainer = motion.create('div');
-
 const CONTAINER_MOTION_PROPS = {
   variants: {
     hidden: {
@@ -29,12 +28,10 @@ const CONTAINER_MOTION_PROPS = {
   animate: 'visible',
   exit: 'hidden',
 };
-
 interface ChatTranscriptProps {
   hidden?: boolean;
   messages?: ReceivedMessage[];
 }
-
 export function ChatTranscript({
   hidden = false,
   messages = [],
@@ -42,7 +39,6 @@ export function ChatTranscript({
   ...props
 }: ChatTranscriptProps & Omit<HTMLMotionProps<'div'>, 'ref'>) {
   const { state: agentState } = useAgent();
-
   return (
     <div className="absolute top-0 bottom-[135px] flex w-full flex-col md:bottom-[170px]">
       <AnimatePresence>

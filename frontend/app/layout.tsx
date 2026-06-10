@@ -11,7 +11,6 @@ const publicSans = Public_Sans({
   variable: '--font-public-sans',
   subsets: ['latin'],
 });
-
 const commitMono = localFont({
   display: 'swap',
   variable: '--font-commit-mono',
@@ -38,17 +37,14 @@ const commitMono = localFont({
     },
   ],
 });
-
 interface RootLayoutProps {
   children: React.ReactNode;
 }
-
 export default async function RootLayout({ children }: RootLayoutProps) {
   const hdrs = await headers();
   const appConfig = await getAppConfig(hdrs);
   const styles = getStyles(appConfig);
   const { pageTitle, pageDescription, companyName, logo, logoDark } = appConfig;
-
   return (
     <html
       lang="en"
@@ -78,9 +74,8 @@ export default async function RootLayout({ children }: RootLayoutProps) {
               href="https://livekit.io"
               className="scale-100 transition-transform duration-300 hover:scale-110"
             >
-              {/* eslint-disable-next-line @next/next/no-img-element */}
               <img src={logo} alt={`${companyName} Logo`} className="block size-6 dark:hidden" />
-              {/* eslint-disable-next-line @next/next/no-img-element */}
+
               <img
                 src={logoDark ?? logo}
                 alt={`${companyName} Logo`}

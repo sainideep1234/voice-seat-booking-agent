@@ -18,9 +18,7 @@ import { fileURLToPath } from 'node:url';
 import z from 'zod';
 
 dotenv.config({ path: '.env.local' });
-
 const BASE_EXPRESS_URL = 'http://localhost:3001/api';
-
 class Assistant extends voice.Agent {
   constructor() {
     super({
@@ -74,7 +72,6 @@ class Assistant extends voice.Agent {
             return new Date().toLocaleString();
           },
         }),
-
         getWeather: llm.tool({
           description: `Use this tool to look up current weather information in the given location.
           If the location is not supported by the weather service, the tool will indicate this. You must tell the user the location's weather is unavailable.`,
@@ -92,7 +89,6 @@ class Assistant extends voice.Agent {
             const response = await axios.get(
               `http://api.weatherapi.com/v1/current.json?key=${process.env.WEATHER_API_KEY}&q=${location}&dt=${date}`,
             );
-
             return response.data;
           },
         }),
@@ -107,10 +103,10 @@ class Assistant extends voice.Agent {
             specialRequests: z.string().describe('birthday , no pizza etc'),
             seatingPreference: z
               .enum(['indoor', 'outdoor'])
-              .describe('string that defien seating arangenment'), // indoor/outdoor
+              .describe('string that defien seating arangenment'),
             status: z
               .enum(['cancelled', 'confirmed', 'pending'])
-              .describe('that defien youir staus of seat'), // confirmed, pending, cancelled
+              .describe('that defien youir staus of seat'),
             weatherInfo: z
               .object({ weather: z.string(), temprature: z.string() })
               .describe('get from weather api tool'),
@@ -183,73 +179,47 @@ class Assistant extends voice.Agent {
     });
   }
 }
-
 export default defineAgent({
   prewarm: async (proc: JobProcess) => {
     proc.userData.vad = await silero.VAD.load();
   },
-
   entry: async (ctx: JobContext) => {
-    // Set up a voice AI pipeline using OpenAI, Cartesia, AssemblyAI, and the LiveKit turn detector
     const session = new voice.AgentSession({
       stt: new inference.STT({
         model: 'assemblyai/universal-streaming',
         language: 'en',
       }),
-
-      // A Large Language Model (LLM) is your agent's brain, processing user input and generating a response
-      // See all providers at https://docs.livekit.io/agents/models/llm/
       llm: new inference.LLM({
         model: 'openai/gpt-4.1-mini',
       }),
-
-      // Text-to-speech (TTS) is your agent's voice, turning the LLM's text into speech that the user can hear
-      // See all available models as well as voice selections at https://docs.livekit.io/agents/models/tts/
       tts: new inference.TTS({
         model: 'cartesia/sonic-3',
         voice: '9626c31c-bec5-4cca-baa8-f8ba9e84c8bc',
       }),
-
-      // VAD and turn detection are used to determine when the user is speaking and when the agent should respond
-      // See more at https://docs.livekit.io/agents/build/turns
       turnDetection: new livekit.turnDetector.MultilingualModel(),
       vad: ctx.proc.userData.vad! as silero.VAD,
       voiceOptions: {
-        // Allow the LLM to generate a response while waiting for the end of turn
         preemptiveGeneration: true,
       },
     });
-
-    // Metrics collection, to measure pipeline performance
-    // For more information, see https://docs.livekit.io/agents/build/metrics/
     const usageCollector = new metrics.UsageCollector();
     session.on(voice.AgentSessionEventTypes.MetricsCollected, (ev) => {
       metrics.logMetrics(ev.metrics);
       usageCollector.collect(ev.metrics);
     });
-
     const logUsage = async () => {
       const summary = usageCollector.getSummary();
       console.log(`Usage: ${JSON.stringify(summary)}`);
     };
-
     ctx.addShutdownCallback(logUsage);
-
-    // Start the session, which initializes the voice pipeline and warms up the models
     await session.start({
       agent: new Assistant(),
       room: ctx.room,
       inputOptions: {
-        // LiveKit Cloud enhanced noise cancellation
-        // - If self-hosting, omit this parameter
-        // - For telephony applications, use `BackgroundVoiceCancellationTelephony` for best results
         noiseCancellation: BackgroundVoiceCancellation(),
       },
     });
-
-    // Join the room and connect to the user
     await ctx.connect();
   },
 });
-
 cli.runApp(new ServerOptions({ agent: fileURLToPath(import.meta.url) }));

@@ -8,7 +8,6 @@ import { WelcomeView } from '@/components/app/welcome-view';
 
 const MotionWelcomeView = motion.create(WelcomeView);
 const MotionSessionView = motion.create(SessionView);
-
 const VIEW_MOTION_PROPS = {
   variants: {
     visible: {
@@ -26,17 +25,13 @@ const VIEW_MOTION_PROPS = {
     ease: 'linear',
   },
 };
-
 interface ViewControllerProps {
   appConfig: AppConfig;
 }
-
 export function ViewController({ appConfig }: ViewControllerProps) {
   const { isConnected, start } = useSessionContext();
-
   return (
     <AnimatePresence mode="wait">
-      {/* Welcome view */}
       {!isConnected && (
         <MotionWelcomeView
           key="welcome"
@@ -45,7 +40,7 @@ export function ViewController({ appConfig }: ViewControllerProps) {
           onStartCall={start}
         />
       )}
-      {/* Session view */}
+
       {isConnected && (
         <MotionSessionView key="session-view" {...VIEW_MOTION_PROPS} appConfig={appConfig} />
       )}

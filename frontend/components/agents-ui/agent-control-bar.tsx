@@ -29,7 +29,6 @@ const TOGGLE_VARIANT_1 = [
   '[&_[data-state=off]]:focus-visible:ring-foreground/12 [&_[data-state=off]]:focus-visible:border-ring',
   'dark:[&_[data-state=off]_~_button]:bg-accent dark:[&_[data-state=off]_~_button:hover]:bg-foreground/10',
 ];
-
 const TOGGLE_VARIANT_2 = [
   'data-[state=off]:bg-accent data-[state=off]:hover:bg-foreground/10',
   'data-[state=off]:border-border data-[state=off]:hover:border-foreground/12',
@@ -40,7 +39,6 @@ const TOGGLE_VARIANT_2 = [
   'data-[state=on]:focus-visible:border-blue-700/50',
   'dark:data-[state=on]:bg-blue-500/20 dark:data-[state=on]:text-blue-300',
 ];
-
 const MOTION_PROPS = {
   variants: {
     hidden: {
@@ -60,21 +58,17 @@ const MOTION_PROPS = {
     ease: 'easeOut',
   },
 };
-
 interface AgentChatInputProps {
   chatOpen: boolean;
   onSend?: (message: string) => void;
   className?: string;
 }
-
 function AgentChatInput({ chatOpen, onSend = async () => {}, className }: AgentChatInputProps) {
   const inputRef = useRef<HTMLTextAreaElement>(null);
   const [isSending, setIsSending] = useState(false);
   const [message, setMessage] = useState<string>('');
-
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-
     try {
       setIsSending(true);
       await onSend(message);
@@ -85,15 +79,11 @@ function AgentChatInput({ chatOpen, onSend = async () => {}, className }: AgentC
       setIsSending(false);
     }
   };
-
   const isDisabled = isSending || message.trim().length === 0;
-
   useEffect(() => {
     if (chatOpen) return;
-    // when not disabled refocus on input
     inputRef.current?.focus();
   }, [chatOpen]);
-
   return (
     <form
       onSubmit={handleSubmit}
@@ -121,110 +111,23 @@ function AgentChatInput({ chatOpen, onSend = async () => {}, className }: AgentC
     </form>
   );
 }
-
-/**
- * Configuration for which controls to display in the AgentControlBar.
- */
 export interface AgentControlBarControls {
-  /**
-   * Whether to show the leave/disconnect button.
-   * @defaultValue true
-   */
   leave?: boolean;
-  /**
-   * Whether to show the camera toggle control.
-   * @defaultValue true (if camera publish permission is granted)
-   */
   camera?: boolean;
-  /**
-   * Whether to show the microphone toggle control.
-   * @defaultValue true (if microphone publish permission is granted)
-   */
   microphone?: boolean;
-  /**
-   * Whether to show the screen share toggle control.
-   * @defaultValue true (if screen share publish permission is granted)
-   */
   screenShare?: boolean;
-  /**
-   * Whether to show the chat toggle control.
-   * @defaultValue true (if data publish permission is granted)
-   */
   chat?: boolean;
 }
-
 export interface AgentControlBarProps extends UseInputControlsProps {
-  /**
-   * The visual style of the control bar.
-   * @default 'default'
-   */
   variant?: 'default' | 'outline' | 'livekit';
-  /**
-   * This takes an object with the following keys: `leave`, `microphone`, `screenShare`, `camera`, `chat`.
-   * Each key maps to a boolean value that determines whether the control is displayed.
-   *
-   * @default
-   * {
-   *   leave: true,
-   *   microphone: true,
-   *   screenShare: true,
-   *   camera: true,
-   *   chat: true,
-   * }
-   */
   controls?: AgentControlBarControls;
-  /**
-   * Whether to save user choices.
-   * @default true
-   */
   saveUserChoices?: boolean;
-  /**
-   * Whether the agent is connected to a session.
-   * @default false
-   */
   isConnected?: boolean;
-  /**
-   * Whether the chat input interface is open.
-   * @default false
-   */
   isChatOpen?: boolean;
-  /**
-   * The callback for when the user disconnects.
-   */
   onDisconnect?: () => void;
-  /**
-   * The callback for when the chat is opened or closed.
-   */
   onIsChatOpenChange?: (open: boolean) => void;
-  /**
-   * The callback for when a device error occurs.
-   */
   onDeviceError?: (error: { source: Track.Source; error: Error }) => void;
 }
-
-/**
- * A control bar specifically designed for voice assistant interfaces.
- * Provides controls for microphone, camera, screen share, chat, and disconnect.
- * Includes an expandable chat input for text-based interaction with the agent.
- *
- * @extends ComponentProps<'div'>
- *
- * @example
- * ```tsx
- * <AgentControlBar
- *   variant="livekit"
- *   isConnected={true}
- *   onDisconnect={() => handleDisconnect()}
- *   controls={{
- *     microphone: true,
- *     camera: true,
- *     screenShare: false,
- *     chat: true,
- *     leave: true,
- *   }}
- * />
- * ```
- */
 export function AgentControlBar({
   variant = 'default',
   controls,
@@ -250,11 +153,9 @@ export function AgentControlBar({
     handleMicrophoneDeviceSelectError,
     handleCameraDeviceSelectError,
   } = useInputControls({ onDeviceError, saveUserChoices });
-
   const handleSendMessage = async (message: string) => {
     await send(message);
   };
-
   const visibleControls = {
     leave: controls?.leave ?? true,
     microphone: controls?.microphone ?? publishPermissions.microphone,
@@ -262,14 +163,11 @@ export function AgentControlBar({
     camera: controls?.camera ?? publishPermissions.camera,
     chat: controls?.chat ?? publishPermissions.data,
   };
-
   const isEmpty = Object.values(visibleControls).every((value) => !value);
-
   if (isEmpty) {
     console.warn('AgentControlBar: `visibleControls` contains only false values.');
     return null;
   }
-
   return (
     <div
       aria-label="Voice assistant controls"
@@ -295,7 +193,6 @@ export function AgentControlBar({
 
       <div className="flex gap-1">
         <div className="flex grow gap-1">
-          {/* Toggle Microphone */}
           {visibleControls.microphone && (
             <AgentTrackControl
               variant={variant === 'outline' ? 'outline' : 'default'}
@@ -317,7 +214,6 @@ export function AgentControlBar({
             />
           )}
 
-          {/* Toggle Camera */}
           {visibleControls.camera && (
             <AgentTrackControl
               variant={variant === 'outline' ? 'outline' : 'default'}
@@ -339,7 +235,6 @@ export function AgentControlBar({
             />
           )}
 
-          {/* Toggle Screen Share */}
           {visibleControls.screenShare && (
             <AgentTrackToggle
               variant={variant === 'outline' ? 'outline' : 'default'}
@@ -352,7 +247,6 @@ export function AgentControlBar({
             />
           )}
 
-          {/* Toggle Transcript */}
           {visibleControls.chat && (
             <Toggle
               variant={variant === 'outline' ? 'outline' : 'default'}
@@ -372,7 +266,6 @@ export function AgentControlBar({
           )}
         </div>
 
-        {/* Disconnect */}
         {visibleControls.leave && (
           <AgentDisconnectButton
             onClick={onDisconnect}

@@ -32,7 +32,6 @@ const buttonVariants = cva(
     },
   }
 );
-
 function Button({
   className,
   variant = 'default',
@@ -44,7 +43,6 @@ function Button({
     asChild?: boolean;
   }) {
   const Comp = asChild ? Slot : 'button';
-
   return (
     <Comp
       data-slot="button"
@@ -55,5 +53,4 @@ function Button({
     />
   );
 }
-
 export { Button, buttonVariants };

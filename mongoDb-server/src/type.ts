@@ -1,5 +1,4 @@
 import z from "zod";
-
 export const bookInput = z.object({
   customerName: z.string(),
   numberOfGuests: z.number(),

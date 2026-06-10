@@ -8,10 +8,8 @@ interface ToastProps {
   title: ReactNode;
   description: ReactNode;
 }
-
 function toastAlert(toast: ToastProps) {
   const { title, description } = toast;
-
   return sonnerToast.custom(
     (id) => (
       <Alert onClick={() => sonnerToast.dismiss(id)} className="bg-accent w-full md:w-[364px]">
@@ -20,18 +18,15 @@ function toastAlert(toast: ToastProps) {
         {description && <AlertDescription>{description}</AlertDescription>}
       </Alert>
     ),
-    { duration: 10_000 }
+    { duration: 10000 }
   );
 }
-
 export function useAgentErrors() {
   const agent = useAgent();
   const { isConnected, end } = useSessionContext();
-
   useEffect(() => {
     if (isConnected && agent.state === 'failed') {
       const reasons = agent.failureReasons;
-
       toastAlert({
         title: 'Session ended',
         description: (
@@ -58,7 +53,6 @@ export function useAgentErrors() {
           </>
         ),
       });
-
       end();
     }
   }, [agent, isConnected, end]);

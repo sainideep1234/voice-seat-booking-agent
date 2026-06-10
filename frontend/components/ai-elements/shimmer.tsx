@@ -11,7 +11,6 @@ export type TextShimmerProps = {
   duration?: number;
   spread?: number;
 };
-
 const ShimmerComponent = ({
   children,
   as: Component = 'p',
@@ -20,9 +19,7 @@ const ShimmerComponent = ({
   spread = 2,
 }: TextShimmerProps) => {
   const MotionComponent = motion.create(Component as keyof JSX.IntrinsicElements);
-
   const dynamicSpread = useMemo(() => (children?.length ?? 0) * spread, [children, spread]);
-
   return (
     <MotionComponent
       animate={{ backgroundPosition: '0% center' }}
@@ -49,5 +46,4 @@ const ShimmerComponent = ({
     </MotionComponent>
   );
 };
-
 export const Shimmer = memo(ShimmerComponent);

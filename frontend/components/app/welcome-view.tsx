@@ -17,12 +17,10 @@ function WelcomeImage() {
     </svg>
   );
 }
-
 interface WelcomeViewProps {
   startButtonText: string;
   onStartCall: () => void;
 }
-
 export const WelcomeView = ({
   startButtonText,
   onStartCall,

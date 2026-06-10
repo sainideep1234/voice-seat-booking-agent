@@ -7,10 +7,8 @@ import { cn } from '@/lib/shadcn/utils';
 interface ThemeToggleProps {
   className?: string;
 }
-
 export function ThemeToggle({ className }: ThemeToggleProps) {
   const { theme, setTheme } = useTheme();
-
   return (
     <div
       className={cn(
